@@ -2,20 +2,19 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class CategoriesSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      *
      * @return void
      */
     public function run()
     {
-      $this->call(UserSeeder::class);
-      $this->call(CategoriesSeeder::class);
-      $this->call(ArticlesSeeder::class);
+        Category::factory()->times(5)->create();
     }
 }
