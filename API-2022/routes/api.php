@@ -13,11 +13,9 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('blog', \App\Http\Controllers\Api\BlogController::class)->middleware('auth:sanctum');
+    Route::post('blog/vote',[\App\Http\Controllers\Api\BlogController::class, 'vote']);
 });
-Route::apiResource('blog',\App\Http\Controllers\Api\BlogController::class);
 Route::post('blog/top-categories',[\App\Http\Controllers\Api\BlogController::class, 'topCategories']);
 Route::post('blog/all-articles',[\App\Http\Controllers\Api\BlogController::class, 'allArticles']);

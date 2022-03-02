@@ -14,17 +14,10 @@ class Article extends Model
     protected $fillable = [
         'title',
         'description',
+        'category_id',
+        'user_id',
         'up',
         'down',
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'id',
     ];
 
     public function category(): BelongsTo
