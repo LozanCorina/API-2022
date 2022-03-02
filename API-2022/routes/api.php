@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
-});
 
+});
 Route::apiResource('blog',\App\Http\Controllers\Api\BlogController::class);
+Route::post('blog/top-categories',[\App\Http\Controllers\Api\BlogController::class, 'topCategories']);
+Route::post('blog/all-articles',[\App\Http\Controllers\Api\BlogController::class, 'allArticles']);

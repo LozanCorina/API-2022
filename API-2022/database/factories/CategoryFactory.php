@@ -21,7 +21,6 @@ class CategoryFactory extends Factory
     {
         return [
             'title' => $this->faker->text(20),
-            'description' => $this->faker->text(50),
         ];
     }
 }

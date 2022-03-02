@@ -13,7 +13,15 @@ class Category extends Model
     protected $table = 'Categories';
     protected $fillable = [
         'title',
-        'description'
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'id',
     ];
 
     public function articles(): HasMany

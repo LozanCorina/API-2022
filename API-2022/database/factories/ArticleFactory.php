@@ -17,8 +17,10 @@ class ArticleFactory extends Factory
     public function definition()
     {
         return [
-            'content' => $this->faker->text(200),
+            'title' => $this->faker->text(30),
+            'description' => $this->faker->text(200),
             'category_id' => rand(1,5),
+            'user_id' => rand(1,3),
             'up' => rand(1,7),
             'down' => rand(1,3),
         ];

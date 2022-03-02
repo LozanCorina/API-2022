@@ -12,13 +12,27 @@ class Article extends Model
     protected $table = 'Articles';
     protected $timestamp = true;
     protected $fillable = [
-        'content',
+        'title',
+        'description',
         'up',
         'down',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'id',
     ];
 
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
