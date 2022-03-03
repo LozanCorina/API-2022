@@ -19,4 +19,6 @@ Endpoint-uri pentru oaspeți:
 - All articles: Toate articolele sortate după data creerii descrescător. Cu posibilitatea de a filtra după id-ul categoriei sau cuvânt cheie care se conține în titlu sau descriere. În raspuns să se conțină și numele categoriei. + Paginare.
 - ![image](https://user-images.githubusercontent.com/61292431/156534061-e55b9ce5-0d8f-4f29-86df-2b7e9a87d8f2.png)
 - Top categories: Maxim 5 categorii sortate dupa reiting descrescator și care au minim două articole + numărul total de articole din categorie.
+- ![image](https://user-images.githubusercontent.com/61292431/156549379-3dcedde6-45be-40ed-8467-ebc5a25a14fd.png)
+
 
