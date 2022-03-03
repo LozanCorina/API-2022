@@ -9,7 +9,6 @@ use App\Models\Article;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class BlogController extends Controller
 {
@@ -123,31 +122,36 @@ class BlogController extends Controller
         return response()->json('Ups, error!');
     }
 
-    /** Show top 5 categories with articles
-     *
+    /** Show top 5 categories with articles by rating order desc
+     *     MySql query
+     * SELECT c.title, ROUND((((avg_vote * avg_rating) + ((up + down) * (up / down)) ) / (avg_vote + (up + down))),2) AS score,
+                COUNT(a.id) AS count_art
+                FROM categories c
+                JOIN articles a ON c.id=a.category_id
+                INNER JOIN (SELECT ((SUM(up) + SUM(down)) / COUNT(a.id)) AS avg_vote FROM articles a) AS t1
+                INNER JOIN (SELECT ((SUM(up) - SUM(down)) / COUNT(a.id)) AS avg_rating FROM articles a) AS t2
+                GROUP by c.id
+                HAVING count_art >=4
+                ORDER BY score DESC
+            LIMIT 5
+
      */
     public function topCategories(): BlogResource
     {
-        $data = Article::select('description, (((avg_vote * avg_rating) + ((up + down) * (up / down)) ) / (avg_vote + (up + down))) AS rating
-                            INNER JOIN (SELECT ((SUM(up) + SUM(down)) / COUNT(articles.id)) AS avg_vote FROM articles) AS t1
-                            INNER JOIN (SELECT ((SUM(up) - SUM(down)) / COUNT(articles.id)) AS avg_rating FROM articles) AS t2
-                            JOIN categories c ON (articles.category_id = c.id)'
-                        )
-                        ->withCount('category')
-                        ->groupBy('c.id')
-                        ->orderBy('rating', 'desc')
-                        ->having('articles_count', '>=', 2)
-                        ->take(5)
-                        ->get();
+        $data = Category::select('*')
+            ->withCount('articles')
+            ->having('articles_count', '>=', 2)
+            ->take(5)
+            ->get();
 
-        return new BlogResource($data);;
-
+        return new BlogResource($data);
     }
 
     /**
      * Return All articles for not logged users
      *
      * @param Request $request
+     *
      */
     public function allArticles(Request $request)
     {
