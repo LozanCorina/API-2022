@@ -128,13 +128,17 @@ class BlogController extends Controller
      */
     public function topCategories(): BlogResource
     {
-        $data = Category::select('*')
-        //, DB::raw('(sum(up,down)) mod 2  rating'))
-            ->withCount('articles')
-            ->having('articles_count', '>=', 2)
-            //->orderBy('rating', 'desc')
-            ->take(5)
-            ->get();
+        $data = Article::select('description, (((avg_vote * avg_rating) + ((up + down) * (up / down)) ) / (avg_vote + (up + down))) AS rating
+                            INNER JOIN (SELECT ((SUM(up) + SUM(down)) / COUNT(articles.id)) AS avg_vote FROM articles) AS t1
+                            INNER JOIN (SELECT ((SUM(up) - SUM(down)) / COUNT(articles.id)) AS avg_rating FROM articles) AS t2
+                            JOIN categories c ON (articles.category_id = c.id)'
+                        )
+                        ->withCount('category')
+                        ->groupBy('c.id')
+                        ->orderBy('rating', 'desc')
+                        ->having('articles_count', '>=', 2)
+                        ->take(5)
+                        ->get();
 
         return new BlogResource($data);;
 
@@ -143,12 +147,19 @@ class BlogController extends Controller
     /**
      * Return All articles for not logged users
      *
-     * @return BlogResource
+     * @param Request $request
      */
-    public function allArticles(): BlogResource
+    public function allArticles(Request $request)
     {
-        return BlogResource::collection(Article::with('category')
-            ->orderBy('created_at', 'desc')
-            ->paginate(3));
+        return Article::join('categories','articles.category_id','categories.id')
+            ->when($request->category, function($query, $category){
+                $query->whereIn('categories.id', $category);
+            })
+            ->when($request->key, function($query, $key) {
+                $query->where('articles.title', 'LIKE', "%{$key}%")
+                ->orWhere('description', 'LIKE',"%{$key}%");
+            })
+            ->orderBy('articles.created_at', 'desc')
+            ->paginate(3);
     }
 }
