@@ -7,8 +7,10 @@ use App\Http\Requests\ArticleRequest;
 use App\Http\Resources\BlogResource;
 use App\Models\Article;
 use App\Models\Category;
+use Illuminate\Console\Scheduling\CacheAware;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class BlogController extends Controller
 {
@@ -19,7 +21,9 @@ class BlogController extends Controller
      */
     public function index()
     {
-        return Article::where('user_id', auth()->id())->paginate(6);
+        return BlogResource::collection(Cache::remember('my_data', 60*60*60, function (){
+            return Article::where('user_id', auth()->id())->get();
+        }));
     }
 
     /**
@@ -42,7 +46,7 @@ class BlogController extends Controller
     {
           $article = Article::create($request->validated());
 
-          return new BlogResource($article);
+          return BlogResource::collection($article);
     }
 
     /**
