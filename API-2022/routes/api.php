@@ -17,5 +17,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('blog', \App\Http\Controllers\Api\BlogController::class)->middleware('auth:sanctum');
     Route::post('blog/vote',[\App\Http\Controllers\Api\BlogController::class, 'vote']);
 });
-Route::post('blog/top-categories',[\App\Http\Controllers\Api\BlogController::class, 'topCategories']);
-Route::post('blog/all-articles',[\App\Http\Controllers\Api\BlogController::class, 'allArticles']);
+Route::get('top-categories',[\App\Http\Controllers\Api\BlogController::class, 'topCategories']);
+Route::get('all-articles',[\App\Http\Controllers\Api\BlogController::class, 'allArticles']);
+
