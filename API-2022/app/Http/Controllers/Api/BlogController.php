@@ -140,7 +140,7 @@ class BlogController extends Controller
             LIMIT 5
 
      */
-    public function topCategories(): BlogResource
+    public function topCategories()
     {
         $data = Category::select('*')
             ->withCount('articles')
@@ -148,7 +148,7 @@ class BlogController extends Controller
             ->take(5)
             ->get();
 
-        return new BlogResource($data);
+        return response()->json($data);
     }
 
     /**
