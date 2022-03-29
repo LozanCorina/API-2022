@@ -30,28 +30,42 @@
 </template>
 
 <script>
-export default {
-    data: function () {
-        return {
-            categories: [],
-            loading: true,
-        }
-    },
+import onMounted from 'vue'
+import useCategories from '../composables/index'
 
-    mounted () {
-       this.loadCategories();
-    },
-    methods: {
-        loadCategories: function() {
-            axios.get('api/v1/top-categories')
-            .then((response) => {
-                this.categories = response.data;
-                this.loading = false;
-            }).catch(() => {
-                alert('Ups..There is an error!');
-            })
-        }
+export default {
+    setup () {
+        const { categories, getCategories } = useCategories()
+
+        onMounted(getCategories)
+
+        return { categories}
     }
+
 }
+
+// export default {
+//     data: function () {
+//         return {
+//             categories: [],
+//             loading: true,
+//         }
+//     },
+//
+//     mounted () {
+//        this.loadCategories();
+//     },
+//     methods: {
+//         loadCategories: function() {
+//             axios.get('api/v1/top-categories')
+//             .then((response) => {
+//                 this.categories = response.data;
+//                 this.loading = false;
+//             }).catch(() => {
+//                 alert('Ups..There is an error!');
+//             })
+//         }
+//     }
+// }
 </script>
 
